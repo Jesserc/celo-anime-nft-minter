@@ -24,8 +24,8 @@ ReactDOM.render(
         chainId: 44787,
       }}
       dapp={{
-        name: "Celo React Boilerplate",
-        description: "A React Boilerplate for Celo Dapps",
+        name: "Celo Anime Collection",
+        description: "Anime Collection built on Celo",
       }}
     >
       <App />
