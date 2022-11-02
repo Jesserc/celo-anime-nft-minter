@@ -15,7 +15,7 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     //tokenId => address => tip balance
     mapping(uint => mapping(address => uint)) public tokenOnwerTipBalance;
 
-    mapping(uint => mapping(address => bool)) public liked;
+    mapping(uint => mapping(address => bool)) private liked;
 
     mapping(uint => uint) public likes;
 
