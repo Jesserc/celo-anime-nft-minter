@@ -1,7 +1,7 @@
 {
+  "homepage": "https://Jesserc.github.io/celo-anime-nft-minter",
   "name": "celo-react-boilerplate",
   "version": "0.1.0",
-  "homepage": "https://celo-nftminter-dapp.vercel.app/",
   "private": true,
   "dependencies": {
     "@celo-tools/use-contractkit": "3.0.0-beta2",

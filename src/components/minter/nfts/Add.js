@@ -10,9 +10,7 @@ const AddNfts = ({ save, address }) => {
   const [ipfsImage, setIpfsImage] = useState("");
   const [description, setDescription] = useState("");
   const [attributes, setAttributes] = useState([]);
-  const [show, setShow] = useState(false); // check if all form data has been filled
-  const isFormFilled = () =>
-    name && ipfsImage && description && attributes.length > 2;
+  const [show, setShow] = useState(false);
 
   // close the popup modal
   const handleClose = () => {
@@ -48,10 +46,6 @@ const AddNfts = ({ save, address }) => {
     // add a new attribute
     setAttributes((oldArray) => [...oldArray, attributeObject]);
   };
-
-  useEffect(() => {
-    return () => {};
-  }, [AddNfts]);
 
   return (
     <>
