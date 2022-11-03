@@ -12,8 +12,10 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    uint public tip = 0.05 ether;
+
     //tokenId => address => tip balance
-    mapping(uint => mapping(address => uint)) public tokenOnwerTipBalance;
+    mapping(uint => mapping(address => uint)) public tokenOwnerTipBalance;
 
     constructor() ERC721("MyNFT", "MNFT") {}
 
@@ -30,16 +32,21 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         payable
         returns (bool success)
     {
-        require(
-            msg.value == 0.05 ether,
-            "You can tip only 0.5 ether at a time"
-        );
         address tokenOwner = ownerOf(tokenId);
+        require(msg.sender != tokenOwner, "can't tip self");
+        require(
+            msg.value == tip,
+            "Send the correct tip"
+        );
 
-        tokenOnwerTipBalance[tokenId][tokenOwner] += msg.value;
+        tokenOwnerTipBalance[tokenId][tokenOwner] += msg.value;
 
         (success, ) = payable(tokenOwner).call{value: msg.value}("");
         require(success, "Failed to send");
+    }
+
+    function changeTip(uint _tip) public onlyOwner{
+        tip = _tip;
     }
 
     // The following functions are overrides required by Solidity.
