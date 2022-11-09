@@ -15,24 +15,32 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     //tokenId => address => tip balance
     mapping(uint => mapping(address => uint)) public tokenOnwerTipBalance;
 
+    mapping(uint => mapping(address => bool)) private liked;
+
+    mapping(uint => uint) public likes;
+
     constructor() ERC721("MyNFT", "MNFT") {}
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    /// @dev mint function for arts
+    function safeMint(address to, string calldata uri) public onlyOwner {
+        require(to != address(0), "Invalid minter address");
+        require(bytes(uri).length > 0);
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    //function to tip owner of an nft
+    /// @dev function to tip owner of an nft
     function tipNftOwner(uint256 tokenId)
         public
         payable
         returns (bool success)
     {
+        require(owner() != msg.sender, "Owner can't tip his arts");
         require(
             msg.value == 0.05 ether,
-            "You can tip only 0.5 ether at a time"
+            "You can tip only 0.5 CELO at a time"
         );
         address tokenOwner = ownerOf(tokenId);
 
@@ -40,6 +48,21 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
         (success, ) = payable(tokenOwner).call{value: msg.value}("");
         require(success, "Failed to send");
+    }
+
+
+    /**
+        * @dev allow users to like or dislike an art
+     */
+    function likeOrDislike(uint tokenId) public {
+        require(_exists(tokenId), "Query of nonexistent tokenId");
+        if(liked[tokenId][msg.sender]){
+            liked[tokenId][msg.sender] = false;
+            likes[tokenId]--;
+        }else{
+            liked[tokenId][msg.sender] = true;
+            likes[tokenId]++;
+        }
     }
 
     // The following functions are overrides required by Solidity.
