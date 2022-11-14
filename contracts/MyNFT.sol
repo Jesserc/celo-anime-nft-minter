@@ -12,8 +12,18 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    struct Anime {
+        uint256 tokenId;
+        address payable seller;
+        address payable owner;
+        uint256 price;
+        bool sold;
+    }
+
     //tokenId => address => tip balance
     mapping(uint => mapping(address => uint)) public tokenOnwerTipBalance;
+
+    mapping(uint256 => Anime) private animes;
 
     mapping(uint => mapping(address => bool)) private liked;
 
@@ -31,6 +41,44 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         _setTokenURI(tokenId, uri);
     }
 
+    function makeTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
+        address tokenOwner = ownerOf(tokenId);
+        _transfer(from, to, tokenId);
+        animes[tokenId].owner = payable(to);
+    }
+
+    function createAnime(uint256 tokenId, uint256 price) private {
+        require(price > 0, "Price must be at least 1 wei");
+        animes[tokenId] = Anime(
+            tokenId,
+            payable(msg.sender),
+            payable(address(this)),
+            price,
+            false
+        );
+
+        _transfer(msg.sender, address(this), tokenId);
+    }
+
+    function buyAnime(uint256 tokenId) public payable {
+        uint256 price = animes[tokenId].price;
+        address seller = animes[tokenId].seller;
+        require(
+            msg.value >= price,
+            "Please submit the asking price in order to complete the purchase"
+        );
+        animes[tokenId].owner = payable(msg.sender);
+        animes[tokenId].sold = true;
+        animes[tokenId].seller = payable(address(0));
+        _transfer(address(this), msg.sender, tokenId);
+
+        payable(seller).transfer(msg.value);
+    }
+
     /// @dev function to tip owner of an nft
     function tipNftOwner(uint256 tokenId)
         public
@@ -38,10 +86,7 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         returns (bool success)
     {
         require(owner() != msg.sender, "Owner can't tip his arts");
-        require(
-            msg.value == 0.05 ether,
-            "You can tip only 0.5 CELO at a time"
-        );
+        require(msg.value == 0.05 ether, "You can tip only 0.5 CELO at a time");
         address tokenOwner = ownerOf(tokenId);
 
         tokenOnwerTipBalance[tokenId][tokenOwner] += msg.value;
@@ -50,16 +95,16 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         require(success, "Failed to send");
     }
 
-
     /**
-        * @dev allow users to like or dislike an art
+     * @dev allow users to like or dislike an art
      */
     function likeOrDislike(uint tokenId) public {
+        require(owner() != msg.sender, "Owner can't like his arts");
         require(_exists(tokenId), "Query of nonexistent tokenId");
-        if(liked[tokenId][msg.sender]){
+        if (liked[tokenId][msg.sender]) {
             liked[tokenId][msg.sender] = false;
             likes[tokenId]--;
-        }else{
+        } else {
             liked[tokenId][msg.sender] = true;
             likes[tokenId]++;
         }
