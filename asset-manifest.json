@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/celo-anime-nft-minter/static/css/main.d87cbb72.chunk.css",
-    "main.js": "/celo-anime-nft-minter/static/js/main.6e126240.chunk.js",
-    "main.js.map": "/celo-anime-nft-minter/static/js/main.6e126240.chunk.js.map",
+    "main.js": "/celo-anime-nft-minter/static/js/main.89071b73.chunk.js",
+    "main.js.map": "/celo-anime-nft-minter/static/js/main.89071b73.chunk.js.map",
     "runtime-main.js": "/celo-anime-nft-minter/static/js/runtime-main.f797efe7.js",
     "runtime-main.js.map": "/celo-anime-nft-minter/static/js/runtime-main.f797efe7.js.map",
     "static/css/2.4bbd2c39.chunk.css": "/celo-anime-nft-minter/static/css/2.4bbd2c39.chunk.css",
-    "static/js/2.b4d55404.chunk.js": "/celo-anime-nft-minter/static/js/2.b4d55404.chunk.js",
-    "static/js/2.b4d55404.chunk.js.map": "/celo-anime-nft-minter/static/js/2.b4d55404.chunk.js.map",
+    "static/js/2.8ac25fec.chunk.js": "/celo-anime-nft-minter/static/js/2.8ac25fec.chunk.js",
+    "static/js/2.8ac25fec.chunk.js.map": "/celo-anime-nft-minter/static/js/2.8ac25fec.chunk.js.map",
     "static/js/3.b670fbe6.chunk.js": "/celo-anime-nft-minter/static/js/3.b670fbe6.chunk.js",
     "static/js/3.b670fbe6.chunk.js.map": "/celo-anime-nft-minter/static/js/3.b670fbe6.chunk.js.map",
     "index.html": "/celo-anime-nft-minter/index.html",
     "static/css/2.4bbd2c39.chunk.css.map": "/celo-anime-nft-minter/static/css/2.4bbd2c39.chunk.css.map",
     "static/css/main.d87cbb72.chunk.css.map": "/celo-anime-nft-minter/static/css/main.d87cbb72.chunk.css.map",
-    "static/js/2.b4d55404.chunk.js.LICENSE.txt": "/celo-anime-nft-minter/static/js/2.b4d55404.chunk.js.LICENSE.txt",
+    "static/js/2.8ac25fec.chunk.js.LICENSE.txt": "/celo-anime-nft-minter/static/js/2.8ac25fec.chunk.js.LICENSE.txt",
     "static/media/bootstrap-icons.css": "/celo-anime-nft-minter/static/media/bootstrap-icons.ea98e12d.woff2",
     "static/media/nft_geo_cover.881ecc0e.png": "/celo-anime-nft-minter/static/media/nft_geo_cover.881ecc0e.png"
   },
   "entrypoints": [
     "static/js/runtime-main.f797efe7.js",
     "static/css/2.4bbd2c39.chunk.css",
-    "static/js/2.b4d55404.chunk.js",
+    "static/js/2.8ac25fec.chunk.js",
     "static/css/main.d87cbb72.chunk.css",
-    "static/js/main.6e126240.chunk.js"
+    "static/js/main.89071b73.chunk.js"
   ]
 }
