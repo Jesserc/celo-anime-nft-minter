@@ -121,6 +121,19 @@ export const fetchNftContractOwner = async (minterContract) => {
   }
 };
 
+export const tipAnNftOwner = async (minterContract, performActions, index) => {
+  await performActions(async (kit) => {
+    const { defaultAccount } = kit;
+
+    try {
+      let transaction = await minterContract.methods
+        .tipNftOwner(index)
+        .send({ value: "50000000000000000", from: defaultAccount });
+      return transaction;
+    } catch (error) {}
+  });
+};
+
 export const fetchNftOwnerTipBalance = async (minterContract) => {
   try {
     const nftOwners = [];
@@ -149,15 +162,36 @@ export const fetchNftOwnerTipBalance = async (minterContract) => {
   }
 };
 
-export const tipAnNftOwner = async (minterContract, performActions, index) => {
+export const likeOrDislike = async (minterContract, performActions, index) => {
   await performActions(async (kit) => {
     const { defaultAccount } = kit;
 
     try {
       let transaction = await minterContract.methods
-        .tipNftOwner(index)
-        .send({ value: "50000000000000000", from: defaultAccount });
+        .likeOrDislike(index)
+        .send({ value: "", from: defaultAccount });
       return transaction;
     } catch (error) {}
   });
+};
+
+export const fetchAnimeNFTLikes = async (minterContract) => {
+  try {
+    const nftLikes = [];
+    const nftsLength = await minterContract.methods.totalSupply().call();
+
+    for (let i = 0; i < Number(nftsLength); i++) {
+      const likes = new Promise(async (resolve) => {
+        const totalLikes = await minterContract.methods.likes(i).call();
+        resolve({
+          totalLikes,
+        });
+      });
+
+      nftLikes.push(likes);
+    }
+    return Promise.all(nftLikes);
+  } catch (e) {
+    console.log({ e });
+  }
 };

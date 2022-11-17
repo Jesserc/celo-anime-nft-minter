@@ -1,20 +1,23 @@
-import { React, useState } from "react";
+import { React } from "react";
 import PropTypes from "prop-types";
 import { Card, Col, Badge, Stack, Row } from "react-bootstrap";
 import { truncateAddress } from "../../../utils";
 import { useContractKit } from "@celo-tools/use-contractkit";
 import Identicon from "../../ui/Identicon";
-import { tipAnNftOwner } from "../../../utils/minter";
+import { tipAnNftOwner, likeOrDislike } from "../../../utils/minter";
 import { useMinterContract } from "../../../hooks/useMinterContract";
-const NftCard = ({ nft, nftOwnerTipBalance }) => {
+import { toast } from "react-toastify";
+import { NotificationSuccess } from "../../ui/Notifications";
+const NftCard = ({ nft, nftOwnerTipBalance, nftLikes }) => {
   const { image, description, owner, name, index, attributes } = nft;
-  const { performActions, address, kit } = useContractKit();
+  const { performActions, kit } = useContractKit();
 
   //function to format nft owner tipped balance
   const formatWei = (wei) => {
     let bal = kit.web3.utils.fromWei(wei);
     return bal;
   };
+
   //variable for nft owner tipped amount
   var tipBal;
   //wait till state updates and not equal to undefined
@@ -23,11 +26,37 @@ const NftCard = ({ nft, nftOwnerTipBalance }) => {
     const newOwnerBal = formatWei(ownerBal);
     tipBal = newOwnerBal;
   }
+
+  //variable for nft likes
+  var allNftLikes;
+  //wait till state updates and not equal to undefined
+  if (nftLikes !== undefined) {
+    const { totalLikes } = nftLikes;
+    allNftLikes = totalLikes;
+  }
+
   const minterContract = useMinterContract();
 
-  const tip = (id) => {
-    tipAnNftOwner(minterContract, performActions, id);
+  const tip = async (id) => {
+    try {
+      await tipAnNftOwner(minterContract, performActions, id);
+      toast(
+        <NotificationSuccess text="Refresh browser to update NFT owner tip balance" />
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const likeOrDislikeNFT = async (id) => {
+    try {
+      await likeOrDislike(minterContract, performActions, id);
+      toast(<NotificationSuccess text="Refresh browser to update NFT likes" />);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Col key={index}>
       <Card className=" h-100">
@@ -65,7 +94,7 @@ const NftCard = ({ nft, nftOwnerTipBalance }) => {
             <Row className="mt-2">
               {attributes.map((attribute, key) => (
                 <Col key={key}>
-                  <div className="bordyer rounded bg-light">
+                  <div className="border rounded bg-light">
                     <div className="text-secondary fw-lighter small text-capitalize">
                       {attribute.trait_type}
                     </div>
@@ -75,6 +104,35 @@ const NftCard = ({ nft, nftOwnerTipBalance }) => {
                   </div>
                 </Col>
               ))}
+            </Row>
+          </div>
+
+          <div>
+            <Row className="mt-2">
+              <Col>
+                <div className="border rounded bg-light d-flex justify-content-around p-2 m-2">
+                  <div className="text-secondary text-capitalize font-monospace w-35">
+                    <button
+                      className="font-monospace"
+                      style={{
+                        border: "none",
+                        borderRadius: "3px",
+                        fontSize: "0.9rem",
+                        color: "white",
+                        padding: "5px 20px",
+                        background: "#F49D1A",
+                        boxShadow: "rgba(20, 70, 32, .2) 0 1px 0 inset",
+                      }}
+                      onClick={() => likeOrDislikeNFT(index)}
+                    >
+                      like/dislike
+                    </button>
+                  </div>
+                  <div className="text-secondary text-capitalize font-monospace w-35">
+                    Total Likes: {allNftLikes}
+                  </div>
+                </div>
+              </Col>
             </Row>
           </div>
           <button

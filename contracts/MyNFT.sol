@@ -13,11 +13,11 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     //tokenId => address => tip balance
-    mapping(uint => mapping(address => uint)) public tokenOnwerTipBalance;
+    mapping(uint256 => mapping(address => uint256)) public tokenOnwerTipBalance;
 
-    mapping(uint => mapping(address => bool)) private liked;
+    mapping(uint256 => mapping(address => bool)) private liked;
 
-    mapping(uint => uint) public likes;
+    mapping(uint256 => uint256) public likes;
 
     constructor() ERC721("MyNFT", "MNFT") {}
 
@@ -38,10 +38,7 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         returns (bool success)
     {
         require(owner() != msg.sender, "Owner can't tip his arts");
-        require(
-            msg.value == 0.05 ether,
-            "You can tip only 0.5 CELO at a time"
-        );
+        require(msg.value == 0.05 ether, "You can tip only 0.5 CELO at a time");
         address tokenOwner = ownerOf(tokenId);
 
         tokenOnwerTipBalance[tokenId][tokenOwner] += msg.value;
@@ -50,16 +47,15 @@ contract MyNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         require(success, "Failed to send");
     }
 
-
     /**
-        * @dev allow users to like or dislike an art
+     * @dev allow users to like or dislike an art
      */
-    function likeOrDislike(uint tokenId) public {
+    function likeOrDislike(uint256 tokenId) public {
         require(_exists(tokenId), "Query of nonexistent tokenId");
-        if(liked[tokenId][msg.sender]){
+        if (liked[tokenId][msg.sender]) {
             liked[tokenId][msg.sender] = false;
             likes[tokenId]--;
-        }else{
+        } else {
             liked[tokenId][msg.sender] = true;
             likes[tokenId]++;
         }

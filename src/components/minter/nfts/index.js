@@ -11,6 +11,7 @@ import {
   createNft,
   fetchNftContractOwner,
   fetchNftOwnerTipBalance,
+  fetchAnimeNFTLikes,
 } from "../../../utils/minter";
 import { Row } from "react-bootstrap";
 
@@ -21,6 +22,7 @@ const NftList = ({ minterContract, name }) => {
   const [loading, setLoading] = useState(false);
   const [nftOwner, setNftOwner] = useState(null);
   const [nftOwnerTipBalance, setNftOwnerTipBalance] = useState([]);
+  const [nftLikes, setNFTLikes] = useState([]);
   const getAssets = useCallback(async () => {
     try {
       setLoading(true);
@@ -60,9 +62,20 @@ const NftList = ({ minterContract, name }) => {
     setNftOwnerTipBalance(ownerBalance);
   }, []);
 
+  const fetchNFTLikes = useCallback(async (minterContract) => {
+    const nftLikes = await fetchAnimeNFTLikes(minterContract);
+    if (!nftLikes) return;
+    setNFTLikes(nftLikes);
+  }, []);
+
   //return the tipped balance of an nft owner based on the nft id/index
   const returnTippedBalance = (index) => {
     return nftOwnerTipBalance[index];
+  };
+
+  //return likes for each nfts
+  const returnAllNftLikes = (index) => {
+    return nftLikes[index];
   };
 
   useEffect(() => {
@@ -73,6 +86,7 @@ const NftList = ({ minterContract, name }) => {
           getAssets();
           fetchContractOwner(minterContract);
           fetchNftOwnerTippedBalance(minterContract);
+          fetchNFTLikes(minterContract);
         }
       } catch (error) {
         console.log({ error });
@@ -87,6 +101,7 @@ const NftList = ({ minterContract, name }) => {
     getAssets,
     fetchContractOwner,
     fetchNftOwnerTippedBalance,
+    fetchNFTLikes,
   ]);
 
   if (address) {
@@ -112,6 +127,7 @@ const NftList = ({ minterContract, name }) => {
                         ..._nft,
                       }}
                       nftOwnerTipBalance={returnTippedBalance(_nft.index)}
+                      nftLikes={returnAllNftLikes(_nft.index)}
                     />
                   ))
                 // )
