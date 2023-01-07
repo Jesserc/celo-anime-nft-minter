@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-# <h1 align="center">Celo Anime Collection</h1>
+# <h1 align="center">AnimeCollectibles</h1>
 ```
 
 ```
